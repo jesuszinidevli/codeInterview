@@ -1,25 +1,17 @@
-const fs = require('fs');
+// controllers/users.js
 
-function readFiles() {
-  fs.readFile('file1.txt', 'utf8', (err, data1) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    fs.readFile('file2.txt', 'utf8', (err, data2) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      fs.writeFile('output.txt', data1 + data2, (err) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        console.log('Files processed successfully!');
-      });
-    });
-  });
+import db from '../libs/db.js';
+
+export async function updateUser(req, res) {
+  const { id, name } = req.body;
+
+  const query = `UPDATE users SET name = '${name}' WHERE id = ${id}`;
+
+  try {
+    await db.query(query);
+    res.send('User updated successfully');
+  } catch (err) {
+    console.log(err);
+    res.send('Update failed');
+  }
 }
-
-readFiles();
